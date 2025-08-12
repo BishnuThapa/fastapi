@@ -35,3 +35,9 @@ async def update_product(new_updated_product: dict,product_id:int):
 @app.patch("/product/{product_id}")
 async def partial_update_product(new_updated_product: dict, product_id: int):
     return {"message": "Partial product updated", "Product id":product_id, "new_updated_product": new_updated_product}
+
+# delete method
+# delete data 
+@app.delete("/product/{product_id}")
+async def delete_product(product_id: int):
+    return {"message": "Product deleted", "Product id": product_id}
