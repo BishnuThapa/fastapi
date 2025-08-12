@@ -53,3 +53,8 @@ class ProductCategory(str, Enum):
 @app.get("/product/{category}")
 async def get_product_by_category(category: ProductCategory):
     return {"message": "Products fetched by category", "Category": category.value}
+
+# path converter
+@app.get("/files/{file_path:path}")
+async def read_file(file_path: str):
+    return {"You requested file at ": file_path}
