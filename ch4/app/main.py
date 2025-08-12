@@ -61,11 +61,16 @@ async def read_file(file_path: str):
 
 
 # Single Query parameter
-@app.get("/product") # product?category="book"
-async def product(category:str):
-    return {"status":"OK", "category": category}
+# @app.get("/product") # product?category="book"
+# async def product(category:str):
+#     return {"status":"OK", "category": category}
 
 # Multiple Query parameter
+# @app.get("/product")  # product?category="book"
+# async def product(category: str, price: float = 5): # default query parameter
+#     return {"status": "OK", "category": category,"price": price}
+
+# Optional Query parameter
 @app.get("/product")  # product?category="book"
-async def product(category: str, price: float = 0.0):
-    return {"status": "OK", "category": category,"price": price}
+async def product(category: str, price: float | None=None):  # default query parameter
+    return {"status": "OK", "category": category, "price": price}
