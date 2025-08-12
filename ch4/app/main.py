@@ -16,3 +16,11 @@ async def all_products():
 @app.get("/product/{product_id}")
 async def single_product(product_id:int):
     return {"message": "Single product fetched", "Product_id": product_id}
+
+# post request
+# create of insert data
+
+
+@app.post("/product")
+async def create_product(new_product:dict):
+    return {"message": "Product Created", "Product": new_product}
