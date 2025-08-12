@@ -1,4 +1,5 @@
 from fastapi import FastAPI,status,Query
+from typing import Annotated
 from enum import Enum
 app=FastAPI()
 
@@ -82,7 +83,13 @@ def home():
 #     return {"message": "Product Created", "Product": new_product}
 
 #limit character in query parameter
+#validation without anotated 
+# @app.get("/product")
+# async def product(search:str | None = Query(default=None, min_length=3, max_length=5)):
+#     return {"status": "OK"}
+
+# validation with anotated
+ # new way to validate query parameter 
 @app.get("/product")
-async def product(search:str | None = Query(default=None, min_length=3, max_length=5)):
-   
+async def product(search:Annotated[str | None, Query(min_length=3, max_length=5)] = None):
     return {"status": "OK"}
