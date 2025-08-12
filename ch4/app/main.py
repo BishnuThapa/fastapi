@@ -58,3 +58,14 @@ async def get_product_by_category(category: ProductCategory):
 @app.get("/files/{file_path:path}")
 async def read_file(file_path: str):
     return {"You requested file at ": file_path}
+
+
+# Single Query parameter
+@app.get("/product") # product?category="book"
+async def product(category:str):
+    return {"status":"OK", "category": category}
+
+# Multiple Query parameter
+@app.get("/product")  # product?category="book"
+async def product(category: str, price: float = 0.0):
+    return {"status": "OK", "category": category,"price": price}
