@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,status
 from enum import Enum
 app=FastAPI()
 
@@ -44,20 +44,20 @@ def home():
 
 
 # Enum example
-class ProductCategory(str, Enum):
-    books = "books"
-    electronics = "electronics"
-    clothing = "clothing"
+# class ProductCategory(str, Enum):
+#     books = "books"
+#     electronics = "electronics"
+#     clothing = "clothing"
 
-# path parameter with predefined values using enum
-@app.get("/product/{category}")
-async def get_product_by_category(category: ProductCategory):
-    return {"message": "Products fetched by category", "Category": category.value}
+# # path parameter with predefined values using enum
+# @app.get("/product/{category}")
+# async def get_product_by_category(category: ProductCategory):
+#     return {"message": "Products fetched by category", "Category": category.value}
 
-# path converter
-@app.get("/files/{file_path:path}")
-async def read_file(file_path: str):
-    return {"You requested file at ": file_path}
+# # path converter
+# @app.get("/files/{file_path:path}")
+# async def read_file(file_path: str):
+#     return {"You requested file at ": file_path}
 
 
 # Single Query parameter
@@ -71,6 +71,12 @@ async def read_file(file_path: str):
 #     return {"status": "OK", "category": category,"price": price}
 
 # Optional Query parameter
-@app.get("/product")  # product?category="book"
-async def product(category: str, price: float | None=None):  # default query parameter
-    return {"status": "OK", "category": category, "price": price}
+# @app.get("/product")  # product?category="book"
+# async def product(category: str, price: float | None=None):  # default query parameter
+#     return {"status": "OK", "category": category, "price": price}
+
+# # post request
+# # create of insert data with status code
+@app.post("/product", status_code=status.HTTP_201_CREATED)
+async def create_product(new_product:dict):
+    return {"message": "Product Created", "Product": new_product}
