@@ -1,4 +1,4 @@
-from fastapi import FastAPI,status
+from fastapi import FastAPI,status,Query
 from enum import Enum
 app=FastAPI()
 
@@ -77,6 +77,12 @@ def home():
 
 # # post request
 # # create of insert data with status code
-@app.post("/product", status_code=status.HTTP_201_CREATED)
-async def create_product(new_product:dict):
-    return {"message": "Product Created", "Product": new_product}
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(new_product:dict):
+#     return {"message": "Product Created", "Product": new_product}
+
+#limit character in query parameter
+@app.get("/product")
+async def product(search:str | None = Query(default=None, min_length=3, max_length=5)):
+   
+    return {"status": "OK"}
