@@ -1,4 +1,6 @@
 from fastapi import FastAPI,status,Query,Body
+from pydantic import BaseModel, Field
+
 from typing import Annotated
 from enum import Enum
 app=FastAPI()
@@ -96,7 +98,6 @@ def home():
 
 
 #create and insert data and validata using pydantic model
-from pydantic import BaseModel
 #define a pydantic model
 class Product(BaseModel):
     id:int
@@ -146,14 +147,14 @@ class Product(BaseModel):
 #     }
 
 # MUltiple body parameters
-class Product(BaseModel):
-    name:str
-    price:float
-    stock:int | None=None
+# class Product(BaseModel):
+#     name:str
+#     price:float
+#     stock:int | None=None
 
-class Seller(BaseModel):
-    name:str
-    full_name:str
+# class Seller(BaseModel):
+#     name:str
+#     full_name:str
 
 # @app.post("/product", status_code=status.HTTP_201_CREATED)
 # async def create_product(product:Product,seller:Seller):
@@ -181,16 +182,45 @@ class Seller(BaseModel):
 #     }
 
 # with embed-> difference shown in reponses of swagger
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(product: Annotated[Product,Body(embed=True)]):
+#     return {
+#         "product": product,
+        
+#         # output: {
+#         #     "product": { # this as a key is added because of embed=True
+#         #         "name": "string",
+#         #         "price": 0,
+#         #         "stock": 0
+#         #     }
+#         # }
+#     }
+
+
+
+#Pydantic Fields, validation
+class Product(BaseModel):
+    name:str=Field(
+        min_length=3, 
+        max_length=10, 
+        title="Product Name", 
+        description="Name of the product"
+        )
+    price:float=Field(
+        gt=0, 
+        le=10000, 
+        title="Product Price", 
+        description="Price of the product"
+        )
+    stock:int | None=Field(
+        default=None,
+        ge=0, 
+        le=1000,
+        title="Product Stock",
+        description="Stock of the product"
+        )
 @app.post("/product", status_code=status.HTTP_201_CREATED)
-async def create_product(product: Annotated[Product,Body(embed=True)]):
+async def create_product(product: Product):
     return {
         "product": product,
-        
-        # output: {
-        #     "product": { # this as a key is added because of embed=True
-        #         "name": "string",
-        #         "price": 0,
-        #         "stock": 0
-        #     }
-        # }
     }
