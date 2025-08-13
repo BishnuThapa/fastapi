@@ -133,14 +133,31 @@ class Product(BaseModel):
 #     return {"product_id": product_id, "updated_product": new_updated_product}
 
 #adding query parameter with request body
-@app.put("/product/{product_id}", status_code=status.HTTP_200_OK)
-async def update_product(
-    product_id: int, 
-    new_updated_product: Product, 
-    discount: float | None = Query(default=None, ge=0, le=100)  # Query parameter with validation
-):
+# @app.put("/product/{product_id}", status_code=status.HTTP_200_OK)
+# async def update_product(
+#     product_id: int, 
+#     new_updated_product: Product, 
+#     discount: float | None = Query(default=None, ge=0, le=100)  # Query parameter with validation
+# ):
+#     return {
+#         "product_id": product_id, 
+#         "updated_product": new_updated_product, 
+#         "discount": discount
+#     }
+
+# MUltiple body parameters
+class Product(BaseModel):
+    name:str
+    price:float
+    stock:int | None=None
+
+class Seller(BaseModel):
+    name:str
+    full_name:str
+
+@app.post("/product", status_code=status.HTTP_201_CREATED)
+async def create_product(product:Product,seller:Seller):
     return {
-        "product_id": product_id, 
-        "updated_product": new_updated_product, 
-        "discount": discount
+        "product": product,
+        "seller": seller
     }
