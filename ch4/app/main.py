@@ -90,6 +90,57 @@ def home():
 
 # validation with anotated
  # new way to validate query parameter 
-@app.get("/product")
-async def product(search:Annotated[str | None, Query(min_length=3, max_length=5)] = None):
-    return {"status": "OK"}
+# @app.get("/product")
+# async def product(search:Annotated[str | None, Query(min_length=3, max_length=5)] = None):
+#     return {"status": "OK"}
+
+
+#create and insert data and validata using pydantic model
+from pydantic import BaseModel
+#define a pydantic model
+class Product(BaseModel):
+    id:int
+    name: str
+    price: float
+    stock:int | None = None  # Optional field
+    
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(new_product: Product): #new product type of Product that is defined above
+#     return new_product
+
+
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# # access attributes of Product model inside function
+# async def create_product(new_product: Product):
+#     print(new_product.id)
+#     print(new_product.name)
+#     print(new_product.price)
+#     print(new_product.stock)
+#     return new_product
+
+
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# add new calculated field to Product model
+# async def create_product(new_product: Product):
+#     product_dict=new_product.model_dump()  # Convert Pydantic model to dictionary
+#     price_with_tax=new_product.price + (new_product.price*18/100)  # Calculate price with tax
+#     product_dict.update({"price_with_tax": price_with_tax})  # Add new field to dictionary
+#     return product_dict
+
+#combining request body with path parameter
+# @app.put("/product/{product_id}", status_code=status.HTTP_200_OK)
+# async def update_product(product_id: int, new_updated_product: Product):
+#     return {"product_id": product_id, "updated_product": new_updated_product}
+
+#adding query parameter with request body
+@app.put("/product/{product_id}", status_code=status.HTTP_200_OK)
+async def update_product(
+    product_id: int, 
+    new_updated_product: Product, 
+    discount: float | None = Query(default=None, ge=0, le=100)  # Query parameter with validation
+):
+    return {
+        "product_id": product_id, 
+        "updated_product": new_updated_product, 
+        "discount": discount
+    }
