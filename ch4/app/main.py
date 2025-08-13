@@ -1,4 +1,4 @@
-from fastapi import FastAPI,status,Query,Body
+from fastapi import FastAPI,status,Query,Body,Cookie
 from pydantic import BaseModel, Field
 
 from typing import Annotated
@@ -199,28 +199,44 @@ class Product(BaseModel):
 
 
 #Pydantic Fields, validation
-class Product(BaseModel):
-    name:str=Field(
-        min_length=3, 
-        max_length=10, 
-        title="Product Name", 
-        description="Name of the product"
-        )
-    price:float=Field(
-        gt=0, 
-        le=10000, 
-        title="Product Price", 
-        description="Price of the product"
-        )
-    stock:int | None=Field(
-        default=None,
-        ge=0, 
-        le=1000,
-        title="Product Stock",
-        description="Stock of the product"
-        )
-@app.post("/product", status_code=status.HTTP_201_CREATED)
-async def create_product(product: Product):
-    return {
-        "product": product,
-    }
+# class Product(BaseModel):
+#     name:str=Field(
+#         min_length=3, 
+#         max_length=10, 
+#         title="Product Name", 
+#         description="Name of the product"
+#         )
+#     price:float=Field(
+#         gt=0, 
+#         le=10000, 
+#         title="Product Price", 
+#         description="Price of the product"
+#         )
+#     stock:int | None=Field(
+#         default=None,
+#         ge=0, 
+#         le=1000,
+#         title="Product Stock",
+#         description="Stock of the product"
+#         )
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(product: Product):
+#     return {
+#         "product": product,
+#     }
+
+#nested pydantic body model
+# Category model use in Product model
+# category=Category in Product model
+# category=list[Category] in Product model-> product as a list supported
+
+
+#Cookie parameter
+@app.get("/products/recommendations")
+async def get_recommendations(session_id:Annotated[str | None,Cookie()]=None):
+    if session_id:
+        return {"message": "Recommendations based on session", "session_id": session_id}
+    else:
+        return {"message": "No session found, showing default recommendations"}
+#cannot check from swagger UI, need to use curl or httpie
+# curl -H "Cookie: session_id=abc123" http://127.0.0.1:8000/products/recommendations
