@@ -1,4 +1,4 @@
-from fastapi import FastAPI,status,Query
+from fastapi import FastAPI,status,Query,Body
 from typing import Annotated
 from enum import Enum
 app=FastAPI()
@@ -155,9 +155,42 @@ class Seller(BaseModel):
     name:str
     full_name:str
 
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(product:Product,seller:Seller):
+#     return {
+#         "product": product,
+#         "seller": seller
+#     }
+
+#make body optional
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(product: Product, seller: Seller | None = None):
+#     return {
+#         "product": product,
+#         "seller": seller
+#     }
+
+
+#singular value in body
+# @app.post("/product", status_code=status.HTTP_201_CREATED)
+# async def create_product(product: Product, seller: Seller,sec_key:Annotated[str,Body()]):
+#     return {
+#         "product": product,
+#         "seller": seller,
+#         "sec_key": sec_key
+#     }
+
+# with embed-> difference shown in reponses of swagger
 @app.post("/product", status_code=status.HTTP_201_CREATED)
-async def create_product(product:Product,seller:Seller):
+async def create_product(product: Annotated[Product,Body(embed=True)]):
     return {
         "product": product,
-        "seller": seller
+        
+        # output: {
+        #     "product": { # this as a key is added because of embed=True
+        #         "name": "string",
+        #         "price": 0,
+        #         "stock": 0
+        #     }
+        # }
     }
